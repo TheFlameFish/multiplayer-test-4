@@ -64,7 +64,7 @@ func shoot(shooter_pid: int):
 	bullet.global_transform = gun.get_node("Sprite/Muzzle").global_transform
 	get_parent().add_child(bullet)
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func take_damage(amount: float) -> void:
 	health -= amount
 	
