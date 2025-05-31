@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=4 uid="uid://cwnv8322yl5jm"]
+[gd_scene load_steps=10 format=4 uid="uid://cwnv8322yl5jm"]
 
 [ext_resource type="Texture2D" uid="uid://bb624exsn3jtx" path="res://tileset.png" id="1_pq8q7"]
 [ext_resource type="Script" uid="uid://bqdp3sy841yx7" path="res://root.gd" id="1_vvh5c"]
 [ext_resource type="Script" uid="uid://ci278r6btrpoi" path="res://death_zone.gd" id="3_vvh5c"]
+[ext_resource type="SystemFont" uid="uid://b06p2t1v1a5tj" path="res://theming/main-font.tres" id="4_28aoi"]
+[ext_resource type="Script" uid="uid://1keedw3ts37t" path="res://ui/notification_manager.gd" id="5_jnlp7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pq8q7"]
 texture = ExtResource("1_pq8q7")
@@ -30,13 +32,14 @@ expand_margin_top = 10.0
 expand_margin_right = 10.0
 expand_margin_bottom = 10.0
 
-[node name="Root" type="Node" node_paths=PackedStringArray("multiplayer_ui", "oid_label", "oid_input", "connected_controls", "server_input")]
+[node name="Root" type="Node" node_paths=PackedStringArray("multiplayer_ui", "oid_label", "oid_input", "connected_controls", "server_input", "notification_manager")]
 script = ExtResource("1_vvh5c")
 multiplayer_ui = NodePath("UI/Multiplayer")
 oid_label = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/HBoxContainer/OID")
 oid_input = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/OIDInput")
 connected_controls = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls")
 server_input = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/HBoxContainer2/ServerInput")
+notification_manager = NodePath("UI/NotificationManager")
 
 [node name="Level" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAACAAIAAQAAAAAAAAABAAIAAQAAAAAAAAAAAAIAAQAAAAAAAAADAAIAAQAAAAAAAAAEAAIAAQAAAAAAAAAFAAIAAQAAAAAAAAAFAAMAAQAAAAAAAAAEAAMAAQAAAAAAAAADAAMAAQAAAAAAAAACAAMAAQAAAAAAAAABAAMAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQAAAAAAAAABAAQAAQAAAAAAAAACAAQAAQAAAAAAAAADAAQAAQAAAAAAAAAEAAQAAQAAAAAAAAAFAAQAAQAAAAAAAAAEAAUAAQAAAAAAAAADAAUAAQAAAAAAAAACAAUAAQAAAAAAAAABAAUAAQAAAAAAAAAIAAEAAQAAAAAAAAAJAAEAAQAAAAAAAAAKAAEAAQAAAAAAAAALAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAANAAEAAQAAAAAAAAAMAAIAAQAAAAAAAAALAAIAAQAAAAAAAAAKAAIAAQAAAAAAAAAJAAIAAQAAAAAAAAAJAAMAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAMAAQAAAAAAAAAMAAMAAQAAAAAAAAAIAAIAAQAAAAAAAAAIAAMAAQAAAAAAAAANAAIAAQAAAAAAAAAJAAQAAQAAAAAAAAAKAAQAAQAAAAAAAAALAAQAAQAAAAAAAAAMAAQAAQAAAAAAAAANAAMAAQAAAAAAAAAQAAIAAQAAAAAAAAARAAIAAQAAAAAAAAASAAIAAQAAAAAAAAATAAIAAQAAAAAAAAAUAAIAAQAAAAAAAAAUAAMAAQAAAAAAAAATAAMAAQAAAAAAAAASAAMAAQAAAAAAAAARAAMAAQAAAAAAAAAQAAMAAQAAAAAAAAAQAAQAAQAAAAAAAAARAAQAAQAAAAAAAAASAAQAAQAAAAAAAAATAAQAAQAAAAAAAAAUAAQAAQAAAAAAAAATAAUAAQAAAAAAAAASAAUAAQAAAAAAAAARAAUAAQAAAAAAAAAVAAIAAQAAAAAAAAAVAAMAAQAAAAAAAAAVAAQAAQAAAAAAAAAUAAUAAQAAAAAAAAA=")
@@ -93,6 +96,7 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_28aoi")
 text = "Coolarg gaming"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
@@ -111,7 +115,6 @@ text = "Connect"
 layout_mode = 2
 
 [node name="ConnectedControls" type="VBoxContainer" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Host" type="Button" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
@@ -145,6 +148,37 @@ alignment = 1
 [node name="Join" type="Button" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
 layout_mode = 2
 text = "Join"
+
+[node name="NotificationManager" type="Control" parent="UI" node_paths=PackedStringArray("container")]
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+script = ExtResource("5_jnlp7")
+container = NodePath("MarginContainer/VBox")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/NotificationManager"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -95.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBox" type="VBoxContainer" parent="UI/NotificationManager/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 9
+alignment = 2
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://54oq3ni4v61w")

@@ -1,0 +1,6 @@
+[gd_resource type="SystemFont" format=3 uid="uid://b06p2t1v1a5tj"]
+
+[resource]
+font_names = PackedStringArray("Arial", "Sans-Serif")
+generate_mipmaps = true
+oversampling = 10.0

@@ -7,6 +7,8 @@ class_name Game extends Node
 @export var connected_controls: Container
 @export var server_input: LineEdit
 
+@export var notification_manager: NotificationManager
+
 @onready var level = $Level
 @onready var player_spawner = $PlayerSpawner
 
@@ -21,6 +23,8 @@ func _ready() -> void:
 	
 	await MultiplayerManager.on_noray_connected
 	oid_label.text = Noray.oid
+	
+	multiplayer.server_disconnected.connect(_on_host_left)
 
 func _process(delta: float) -> void:
 	connected_controls.visible = \
@@ -86,4 +90,10 @@ func _on_connect_pressed() -> void:
 
 	await get_tree().create_timer(2).timeout
 	if !MultiplayerManager.server_connected:
-		OS.alert("Failed to connect to server", "Connection Error")
+		notification_manager.add_notification("Connection Error", \
+			"Failed to connect to server.")
+
+func _on_host_left():
+	multiplayer_ui.visible = true
+	notification_manager.add_notification("Host disconnected.", 
+		"Lost connection to lobby host.")

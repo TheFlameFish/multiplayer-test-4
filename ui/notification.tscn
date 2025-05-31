@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://ck5ug8aptke0f"]
+
+[ext_resource type="SystemFont" uid="uid://b06p2t1v1a5tj" path="res://theming/main-font.tres" id="1_a21k8"]
+[ext_resource type="Script" uid="uid://c11dlgsk6jaho" path="res://ui/notification.gd" id="1_nvrqx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvh5c"]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.321569, 0.321569, 1, 0.615686)
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_28aoi"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.4218, 0.4218, 0.57, 0.615686)
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="Notification" type="VBoxContainer" node_paths=PackedStringArray("titleLabel", "contentLabel", "closeButton")]
+mouse_default_cursor_shape = 2
+theme_override_constants/separation = 0
+script = ExtResource("1_nvrqx")
+titleLabel = NodePath("TopPanel/HBoxContainer/Title")
+contentLabel = NodePath("ContentPanel/Content")
+closeButton = NodePath("TopPanel/HBoxContainer/CloseButton")
+
+[node name="TopPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vvh5c")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopPanel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="TopPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_a21k8")
+text = "Lorem ipsum"
+
+[node name="CloseButton" type="Button" parent="TopPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 1
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "x"
+flat = true
+
+[node name="ContentPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_28aoi")
+
+[node name="Content" type="Label" parent="ContentPanel"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_a21k8")
+theme_override_font_sizes/font_size = 10
+text = "Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean."
+autowrap_mode = 3
+
+[connection signal="mouse_entered" from="." to="." method="_update_mouse_hover" binds= [true]]
+[connection signal="mouse_exited" from="." to="." method="_update_mouse_hover" binds= [false]]
+[connection signal="pressed" from="TopPanel/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

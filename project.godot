@@ -23,11 +23,16 @@ PacketHandshake="*res://addons/netfox.noray/packet-handshake.gd"
 
 [display]
 
-window/stretch/mode="viewport"
+window/size/mode=2
+window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg")
+
+[gui]
+
+theme/custom_font="uid://b06p2t1v1a5tj"
 
 [input]
 
