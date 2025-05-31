@@ -10,7 +10,9 @@ const BULLET = preload("res://bullet/bullet.tscn")
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var gun = $Gun
 
-var health = MAX_HEALTH
+@onready var health_bar: ProgressBar = $UIOverlay/HealthBar
+
+@export var health = MAX_HEALTH
 var lifetime = 0
 
 func _enter_tree() -> void:
@@ -56,6 +58,9 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+
+func _process(delta: float) -> void:
+	health_bar.value = (health / MAX_HEALTH)*100
 
 @rpc("call_local")
 func shoot(shooter_pid: int):
