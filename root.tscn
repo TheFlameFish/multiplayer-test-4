@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://cwnv8322yl5jm"]
+[gd_scene load_steps=8 format=4 uid="uid://cwnv8322yl5jm"]
 
 [ext_resource type="Texture2D" uid="uid://bb624exsn3jtx" path="res://tileset.png" id="1_pq8q7"]
 [ext_resource type="Script" uid="uid://bqdp3sy841yx7" path="res://root.gd" id="1_vvh5c"]
+[ext_resource type="Script" uid="uid://ci278r6btrpoi" path="res://death_zone.gd" id="3_vvh5c"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pq8q7"]
 texture = ExtResource("1_pq8q7")
@@ -15,8 +16,27 @@ tile_size = Vector2i(8, 8)
 physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_pq8q7")
 
-[node name="Root" type="Node"]
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_pyidc"]
+distance = -93.2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pyidc"]
+bg_color = Color(0.321569, 0.321569, 1, 0.615686)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[node name="Root" type="Node" node_paths=PackedStringArray("multiplayer_ui", "oid_label", "oid_input", "connected_controls", "server_input")]
 script = ExtResource("1_vvh5c")
+multiplayer_ui = NodePath("UI/Multiplayer")
+oid_label = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/HBoxContainer/OID")
+oid_input = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/OIDInput")
+connected_controls = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls")
+server_input = NodePath("UI/Multiplayer/PanelContainer/VBoxContainer/HBoxContainer2/ServerInput")
 
 [node name="Level" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAACAAIAAQAAAAAAAAABAAIAAQAAAAAAAAAAAAIAAQAAAAAAAAADAAIAAQAAAAAAAAAEAAIAAQAAAAAAAAAFAAIAAQAAAAAAAAAFAAMAAQAAAAAAAAAEAAMAAQAAAAAAAAADAAMAAQAAAAAAAAACAAMAAQAAAAAAAAABAAMAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQAAAAAAAAABAAQAAQAAAAAAAAACAAQAAQAAAAAAAAADAAQAAQAAAAAAAAAEAAQAAQAAAAAAAAAFAAQAAQAAAAAAAAAEAAUAAQAAAAAAAAADAAUAAQAAAAAAAAACAAUAAQAAAAAAAAABAAUAAQAAAAAAAAAIAAEAAQAAAAAAAAAJAAEAAQAAAAAAAAAKAAEAAQAAAAAAAAALAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAANAAEAAQAAAAAAAAAMAAIAAQAAAAAAAAALAAIAAQAAAAAAAAAKAAIAAQAAAAAAAAAJAAIAAQAAAAAAAAAJAAMAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAMAAQAAAAAAAAAMAAMAAQAAAAAAAAAIAAIAAQAAAAAAAAAIAAMAAQAAAAAAAAANAAIAAQAAAAAAAAAJAAQAAQAAAAAAAAAKAAQAAQAAAAAAAAALAAQAAQAAAAAAAAAMAAQAAQAAAAAAAAANAAMAAQAAAAAAAAAQAAIAAQAAAAAAAAARAAIAAQAAAAAAAAASAAIAAQAAAAAAAAATAAIAAQAAAAAAAAAUAAIAAQAAAAAAAAAUAAMAAQAAAAAAAAATAAMAAQAAAAAAAAASAAMAAQAAAAAAAAARAAMAAQAAAAAAAAAQAAMAAQAAAAAAAAAQAAQAAQAAAAAAAAARAAQAAQAAAAAAAAASAAQAAQAAAAAAAAATAAQAAQAAAAAAAAAUAAQAAQAAAAAAAAATAAUAAQAAAAAAAAASAAUAAQAAAAAAAAARAAUAAQAAAAAAAAAVAAIAAQAAAAAAAAAVAAMAAQAAAAAAAAAVAAQAAQAAAAAAAAAUAAUAAQAAAAAAAAA=")
@@ -30,6 +50,13 @@ position = Vector2(152, 0)
 
 [node name="SpawnPoint2" type="Marker2D" parent="Level"]
 position = Vector2(87, -6)
+
+[node name="DeathZone" type="Area2D" parent="Level"]
+collision_mask = 2
+script = ExtResource("3_vvh5c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/DeathZone"]
+shape = SubResource("WorldBoundaryShape2D_pyidc")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(87, 14)
@@ -45,7 +72,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Multiplayer"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/Multiplayer"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -53,21 +80,69 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -60.5
-offset_top = -46.5
+offset_top = -99.0
 offset_right = 60.5
-offset_bottom = 46.5
+offset_bottom = 99.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pyidc")
 
-[node name="Title" type="Label" parent="UI/Multiplayer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Multiplayer/PanelContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Coolarg gaming"
 
-[node name="Host" type="Button" parent="UI/Multiplayer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ServerInput" type="LineEdit" parent="UI/Multiplayer/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Server Address"
+
+[node name="Connect" type="Button" parent="UI/Multiplayer/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Connect"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectedControls" type="VBoxContainer" parent="UI/Multiplayer/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Host" type="Button" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
 layout_mode = 2
 text = "Host"
 
-[node name="Join" type="Button" parent="UI/Multiplayer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
+layout_mode = 2
+
+[node name="OID" type="Label" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Loading..."
+
+[node name="CopyOID" type="Button" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 20
+text = "⎘"
+
+[node name="HSeparator" type="HSeparator" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
+layout_mode = 2
+
+[node name="OIDInput" type="LineEdit" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
+layout_mode = 2
+placeholder_text = "Host OID"
+alignment = 1
+
+[node name="Join" type="Button" parent="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls"]
 layout_mode = 2
 text = "Join"
 
@@ -75,5 +150,8 @@ text = "Join"
 _spawnable_scenes = PackedStringArray("uid://54oq3ni4v61w")
 spawn_path = NodePath("..")
 
-[connection signal="pressed" from="UI/Multiplayer/VBoxContainer/Host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="UI/Multiplayer/VBoxContainer/Join" to="." method="_on_join_pressed"]
+[connection signal="body_entered" from="Level/DeathZone" to="Level/DeathZone" method="_on_body_entered"]
+[connection signal="pressed" from="UI/Multiplayer/PanelContainer/VBoxContainer/HBoxContainer2/Connect" to="." method="_on_connect_pressed"]
+[connection signal="pressed" from="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/HBoxContainer/CopyOID" to="." method="_on_copy_oid_pressed"]
+[connection signal="pressed" from="UI/Multiplayer/PanelContainer/VBoxContainer/ConnectedControls/Join" to="." method="_on_join_pressed"]
