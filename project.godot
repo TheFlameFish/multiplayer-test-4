@@ -32,7 +32,7 @@ enabled=PackedStringArray("res://addons/netfox.internals/plugin.cfg", "res://add
 
 [gui]
 
-theme/custom_font="uid://b06p2t1v1a5tj"
+theme/custom_font="uid://crawdodokj2a0"
 
 [input]
 

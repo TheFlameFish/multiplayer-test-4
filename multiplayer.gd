@@ -6,7 +6,10 @@ signal on_noray_disconnected
 var noray_address = ""
 const NORAY_PORT = 8890
 
+## The noray server hosting.
 var server_connected = false
+## The peer hosting.
+var host_connected = false
 
 var hosting = false
 var external_oid = ""
@@ -17,6 +20,10 @@ func _ready() -> void:
 	Noray.on_disconnect_from_host.connect(_on_noray_disconnected)
 	Noray.on_connect_nat.connect(_handle_nat_connection)
 	Noray.on_connect_relay.connect(_handle_relay_connection)
+	multiplayer.connected_to_server.connect(func(): 
+		host_connected = true)
+	multiplayer.server_disconnected.connect(func():
+		host_connected = false)
 	
 func setup(address) -> void:
 	print("Connecting to server "+ address)

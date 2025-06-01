@@ -14,8 +14,6 @@ class_name Game extends Node
 
 const PLAYER = preload("res://player/player.tscn")
 
-var peer = ENetMultiplayerPeer.new()
-
 var players: Array[Player] = []
 
 func _ready() -> void:
@@ -24,6 +22,7 @@ func _ready() -> void:
 	await MultiplayerManager.on_noray_connected
 	oid_label.text = Noray.oid
 	
+	MultiplayerManager.on_noray_disconnected.connect(_on_noray_disconnected)
 	multiplayer.server_disconnected.connect(_on_host_left)
 
 func _process(delta: float) -> void:
@@ -56,6 +55,15 @@ func _on_join_pressed() -> void:
 	MultiplayerManager.join(oid_input.text)
 	
 	multiplayer_ui.hide()
+	
+	await get_tree().create_timer(5).timeout
+	if !MultiplayerManager.host_connected:
+		multiplayer_ui.show()
+		multiplayer.multiplayer_peer.close()
+		notification_manager.add_notification("Connection error",
+			"Failed to connect to host.")
+	else:
+		notification_manager.add_notification("Yahoo", "yay")
 
 func _on_copy_oid_pressed() -> void:
 	DisplayServer.clipboard_set(Noray.oid)
@@ -92,6 +100,11 @@ func _on_connect_pressed() -> void:
 	if !MultiplayerManager.server_connected:
 		notification_manager.add_notification("Connection Error", \
 			"Failed to connect to server.")
+
+func _on_noray_disconnected():
+	multiplayer_ui.visible = true
+	notification_manager.add_notification("Server disconnected.",
+		"Lost connection to Noray server")
 
 func _on_host_left():
 	multiplayer_ui.visible = true
